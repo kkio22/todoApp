@@ -1,5 +1,8 @@
 package com.example.todoApp.domain.schedule.service;
 
+import com.example.todoApp.domain.comment.dto.response.CommentListResponseDto;
+import com.example.todoApp.domain.comment.entity.Comment;
+import com.example.todoApp.domain.comment.service.CommentService;
 import com.example.todoApp.domain.schedule.dto.request.ScheduleCreateRequestDto;
 import com.example.todoApp.domain.schedule.dto.request.ScheduleRequestDto;
 import com.example.todoApp.domain.schedule.dto.request.ScheduleUpdateRequestDto;
@@ -8,7 +11,7 @@ import com.example.todoApp.domain.schedule.dto.response.ScheduleListResponseDto;
 import com.example.todoApp.domain.schedule.dto.response.ScheduleResponseDto;
 import com.example.todoApp.domain.schedule.dto.response.ScheduleUpdateResponseDto;
 import com.example.todoApp.domain.schedule.entity.Schedule;
-import com.example.todoApp.domain.schedule.exception.ScheduleErrorCode;
+import com.example.todoApp.global.ErrorCode;
 import com.example.todoApp.domain.schedule.repository.ScheduleRepository;
 import com.example.todoApp.global.CustomException;
 import jakarta.transaction.Transactional;
@@ -31,7 +34,11 @@ public class ScheduleService {
 
     private final ScheduleRepository scheduleRepository;
 
+    private final CommentService commentService;
 
+    /*
+    일정 생성
+     */
     public ScheduleCreateResponseDto createSchedule(ScheduleCreateRequestDto scheduleCreateRequestDto) {
 
         Schedule schedule = new Schedule(
@@ -53,6 +60,9 @@ public class ScheduleService {
         );
     }
 
+    /*
+    일정 10개씩 조회
+     */
 
     public List<ScheduleListResponseDto> findScheduleByPage(Long page, Long size) {
 
@@ -75,9 +85,25 @@ public class ScheduleService {
                 .toList();//다시 List로 변환
     }
 
-    public ScheduleResponseDto findById(Long scheduleId, ScheduleRequestDto scheduleRequestDto) {
+    /*
+    일정 단건 조회
+     */
 
-        Schedule findSchedule = verify(scheduleId, scheduleRequestDto);
+    public ScheduleResponseDto findById(Long scheduleId) {
+
+        Schedule findSchedule = scheduleRepository.findByIdWithComment(scheduleId)
+                .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_SCHEDULE));//여기서 schedule entity 가져오는거고
+
+        List<Comment> commentList = findSchedule.getComments();//매핑된 댓글를 List로 덩어리째 가져옴
+
+        List<CommentListResponseDto> commentListResponseDto = commentList.stream()
+                .map(comment -> new CommentListResponseDto(
+                        comment.getId(),
+                        comment.getWriterId(),
+                        comment.getContent(),
+                        comment.getUpdatedAt()
+                ))
+                .toList();
 
         return new ScheduleResponseDto(
                 findSchedule.getUserId(),
@@ -85,16 +111,30 @@ public class ScheduleService {
                 findSchedule.getWriterId(),
                 findSchedule.getTitle(),
                 findSchedule.getContent(),
-                findSchedule.getCreatedAt()
+                commentListResponseDto,
+                findSchedule.getUpdatedAt()
+
+
         );
+
     }
+
+
+    /*
+    일정 수정
+     */
 
     @Transactional
     public ScheduleUpdateResponseDto updateSchedule(Long scheduleId, ScheduleUpdateRequestDto scheduleUpdateRequestDto) {
 
-        Schedule findSchedule = check(scheduleId, scheduleUpdateRequestDto);
+        Schedule findSchedule = scheduleRepository.findById(scheduleId)
+                .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_SCHEDULE));
 
-        findSchedule.update(
+        if (findSchedule.getUserId() != scheduleUpdateRequestDto.getUserId()) {
+            throw new CustomException(ErrorCode.NOT_FOUND_USER);
+        }
+
+        findSchedule.updateSchedule(
                 scheduleUpdateRequestDto.getTitle(),
                 scheduleUpdateRequestDto.getContent()
         );
@@ -109,38 +149,21 @@ public class ScheduleService {
         );
     }
 
+    /*
+    일정 삭제
+     */
 
     public void deleteSchedule(Long scheduleId, ScheduleRequestDto scheduleRequestDto) {
 
-        Schedule findSchedule = verify(scheduleId, scheduleRequestDto);
-
-        scheduleRepository.delete(findSchedule); // scheduleId로 연결된 댓글도 삭제
-    }
-
-
-    private Schedule verify(Long scheduleId, ScheduleRequestDto scheduleRequestDto) {
-
         Schedule findSchedule = scheduleRepository.findById(scheduleId)
-                .orElseThrow(() -> new CustomException(ScheduleErrorCode.NOT_FOUND_SCHEDULE));
+                .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_SCHEDULE));
 
         if (findSchedule.getUserId() != scheduleRequestDto.getUserId()) {
-            throw new CustomException(ScheduleErrorCode.NOT_FOUND_USER);
+            throw new CustomException(ErrorCode.NOT_FOUND_USER);
         }
 
-        return findSchedule;
-    }
 
-    private Schedule check(Long scheduleId, ScheduleUpdateRequestDto scheduleUpdateRequestDto) {
-
-        Schedule findSchedule = scheduleRepository.findById(scheduleId)
-                .orElseThrow(() -> new CustomException(ScheduleErrorCode.NOT_FOUND_SCHEDULE));
-
-        if (findSchedule.getUserId() != scheduleUpdateRequestDto.getUserId()) {
-            throw new CustomException(ScheduleErrorCode.NOT_FOUND_USER);
-        }
-
-        return findSchedule;
-
+        scheduleRepository.delete(findSchedule); // scheduleId로 연결된 댓글도 삭제
     }
 }
 

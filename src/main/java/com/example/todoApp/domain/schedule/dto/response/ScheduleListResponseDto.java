@@ -16,6 +16,6 @@ public class ScheduleListResponseDto {
 
     private String content;
 
-    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 
 }

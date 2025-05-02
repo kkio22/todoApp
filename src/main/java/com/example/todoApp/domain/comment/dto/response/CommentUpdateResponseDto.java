@@ -1,23 +1,20 @@
-package com.example.todoApp.domain.schedule.dto.response;
-
+package com.example.todoApp.domain.comment.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+
 import java.time.LocalDateTime;
 
 @Getter
 @AllArgsConstructor
-public class ScheduleCreateResponseDto {
-
-    private Long userId;
+public class CommentUpdateResponseDto {
 
     private Long id;
 
     private String writerId;
 
-    private String title;
-
     private String content;
 
     private LocalDateTime updatedAt;
+
 }
