@@ -10,6 +10,8 @@ public class ScheduleListResponseDto {
 
     private Long id;
 
+    private String writerId;
+
     private String title;
 
     private String content;

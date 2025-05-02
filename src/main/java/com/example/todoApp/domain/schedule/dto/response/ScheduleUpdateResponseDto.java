@@ -13,6 +13,8 @@ public class ScheduleUpdateResponseDto {
 
     private Long id;
 
+    private String writerId;
+
     private String title;
 
     private String content;

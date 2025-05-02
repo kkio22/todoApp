@@ -12,6 +12,8 @@ public class ScheduleResponseDto {
 
     private Long id;
 
+    private String writerId;
+
     private String title;
 
     private String content;

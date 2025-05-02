@@ -22,17 +22,14 @@ public class Schedule extends BaseEntity {
     @Column(nullable = false)
     private Long userId;
 
+    @Column(nullable = false, unique = true)
+    private String writerId;
+
     @Column(nullable = false)
     private String title;
 
     @Column(nullable = false)
     private String content;
-
-    @Column//nullable = ture 자동으로 생성
-    private LocalDateTime deletedAt;
-
-    @Column
-    private boolean is_deleted;
 
     @OneToMany(mappedBy = "comment")
     private List<Comment> comments = new ArrayList<>(); // 일정 <-> 댓글 양방향 연결
@@ -41,10 +38,11 @@ public class Schedule extends BaseEntity {
 
     }
 
-    public Schedule(Long userId, String title, String content) {
+    public Schedule(Long userId, String title, String content, String writerId) {
         this.userId = userId;
         this.title = title;
         this.content = content;
+        this.writerId = writerId;
     }
 
     public void update(String title, String content) {

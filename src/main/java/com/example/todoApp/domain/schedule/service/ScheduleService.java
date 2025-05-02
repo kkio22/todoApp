@@ -36,6 +36,7 @@ public class ScheduleService {
 
         Schedule schedule = new Schedule(
                 scheduleCreateRequestDto.getUserId(),
+                scheduleCreateRequestDto.getWriterId(),
                 scheduleCreateRequestDto.getTitle(),
                 scheduleCreateRequestDto.getContent()
         );// dto -> entity 변환
@@ -45,6 +46,7 @@ public class ScheduleService {
         return new ScheduleCreateResponseDto(
                 saveSchedule.getUserId(),
                 saveSchedule.getId(),
+                saveSchedule.getWriterId(),
                 saveSchedule.getTitle(),
                 saveSchedule.getContent(),
                 saveSchedule.getCreatedAt()
@@ -65,6 +67,7 @@ public class ScheduleService {
         return scheduleList.stream()//List를 stream으로 바뀜 => map으로 나타내려고
                 .map(schedule -> new ScheduleListResponseDto(
                         schedule.getId(),
+                        schedule.getWriterId(),
                         schedule.getTitle(),
                         schedule.getContent(),
                         schedule.getCreatedAt()
@@ -79,6 +82,7 @@ public class ScheduleService {
         return new ScheduleResponseDto(
                 findSchedule.getUserId(),
                 findSchedule.getId(),
+                findSchedule.getWriterId(),
                 findSchedule.getTitle(),
                 findSchedule.getContent(),
                 findSchedule.getCreatedAt()
@@ -98,6 +102,7 @@ public class ScheduleService {
         return new ScheduleUpdateResponseDto(
                 findSchedule.getUserId(),
                 findSchedule.getId(),
+                findSchedule.getWriterId(),
                 findSchedule.getTitle(),
                 findSchedule.getContent(),
                 findSchedule.getUpdatedAt()

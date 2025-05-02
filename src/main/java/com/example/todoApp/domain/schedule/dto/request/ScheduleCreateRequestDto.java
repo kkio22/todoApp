@@ -11,6 +11,8 @@ public class ScheduleCreateRequestDto {
 
     private Long userId;
 
+    private String writerId;
+
     private String title;
 
     private String content;
