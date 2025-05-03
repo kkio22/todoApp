@@ -34,7 +34,6 @@ public class ScheduleService {
 
     private final ScheduleRepository scheduleRepository;
 
-    private final CommentService commentService;
 
     /*
     일정 생성
@@ -91,19 +90,8 @@ public class ScheduleService {
 
     public ScheduleResponseDto findById(Long scheduleId) {
 
-        Schedule findSchedule = scheduleRepository.findByIdWithComment(scheduleId)
-                .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_SCHEDULE));//여기서 schedule entity 가져오는거고
-
-        List<Comment> commentList = findSchedule.getComments();//매핑된 댓글를 List로 덩어리째 가져옴
-
-        List<CommentListResponseDto> commentListResponseDto = commentList.stream()
-                .map(comment -> new CommentListResponseDto(
-                        comment.getId(),
-                        comment.getWriterId(),
-                        comment.getContent(),
-                        comment.getUpdatedAt()
-                ))
-                .toList();
+        Schedule findSchedule = scheduleRepository.findByIdWithComment(scheduleId);
+            //orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_SCHEDULE));//여기서 schedule entity 가져오는거고
 
         return new ScheduleResponseDto(
                 findSchedule.getUserId(),
@@ -111,7 +99,6 @@ public class ScheduleService {
                 findSchedule.getWriterId(),
                 findSchedule.getTitle(),
                 findSchedule.getContent(),
-                commentListResponseDto,
                 findSchedule.getUpdatedAt()
 
 

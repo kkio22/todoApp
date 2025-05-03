@@ -1,6 +1,8 @@
 package com.example.todoApp.domain.schedule.dto.response;
 
 import com.example.todoApp.domain.comment.dto.response.CommentListResponseDto;
+import com.example.todoApp.domain.comment.entity.Comment;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import java.time.LocalDateTime;
@@ -19,8 +21,6 @@ public class ScheduleResponseDto {
     private String title;
 
     private String content;
-
-    private List<CommentListResponseDto> commentListResponseDto;
 
     private LocalDateTime updatedAt;
 
