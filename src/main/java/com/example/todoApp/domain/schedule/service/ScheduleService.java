@@ -6,10 +6,7 @@ import com.example.todoApp.domain.comment.service.CommentService;
 import com.example.todoApp.domain.schedule.dto.request.ScheduleCreateRequestDto;
 import com.example.todoApp.domain.schedule.dto.request.ScheduleRequestDto;
 import com.example.todoApp.domain.schedule.dto.request.ScheduleUpdateRequestDto;
-import com.example.todoApp.domain.schedule.dto.response.ScheduleCreateResponseDto;
-import com.example.todoApp.domain.schedule.dto.response.ScheduleListResponseDto;
-import com.example.todoApp.domain.schedule.dto.response.ScheduleResponseDto;
-import com.example.todoApp.domain.schedule.dto.response.ScheduleUpdateResponseDto;
+import com.example.todoApp.domain.schedule.dto.response.*;
 import com.example.todoApp.domain.schedule.entity.Schedule;
 import com.example.todoApp.global.ErrorCode;
 import com.example.todoApp.domain.schedule.repository.ScheduleRepository;
@@ -85,13 +82,13 @@ public class ScheduleService {
     }
 
     /*
-    일정 단건 조회
+    일정 단건 조회 -> 댓글이 있는 없는 그냥 하나로 해결 가능, 없으면 빈 공간으로 내보냄
      */
 
     public ScheduleResponseDto findById(Long scheduleId) {
 
         Schedule findSchedule = scheduleRepository.findByIdWithComment(scheduleId);
-            //orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_SCHEDULE));//여기서 schedule entity 가져오는거고
+
 
         return new ScheduleResponseDto(
                 findSchedule.getUserId(),
@@ -99,6 +96,14 @@ public class ScheduleService {
                 findSchedule.getWriterId(),
                 findSchedule.getTitle(),
                 findSchedule.getContent(),
+                findSchedule.getComments().stream().
+                        map(comment -> new ScheduleWithCommentDto(
+                                comment.getId(),
+                                comment.getContent(),
+                                comment.getWriterId(),
+                                comment.getUpdatedAt()
+                        ))
+                        .toList(),
                 findSchedule.getUpdatedAt()
 
 

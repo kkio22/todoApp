@@ -27,6 +27,9 @@ public class Comment extends BaseEntity {
     @Column(nullable = false)
     private String content;
 
+    @Column
+    private int commentCount = 0;
+
     @ManyToOne(fetch = FetchType.LAZY) // 이것때문에 n +1 발생
     private Schedule schedule;
 
@@ -38,6 +41,7 @@ public class Comment extends BaseEntity {
         this.userId=userId;
         this.content=content;
         this.writerId=writerId;
+        this.commentCount= ++commentCount;
     }
 
     public void updateComment(String content) {

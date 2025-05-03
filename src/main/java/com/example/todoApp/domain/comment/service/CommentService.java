@@ -42,6 +42,7 @@ public class CommentService {
                 commentCreateRequestDto.getWriterId()
         );
 
+
         Comment saveComment = commentRepository.save(comment); //DB에 저장
 
         return new CommentCreateResponseDto( // entity -> dto
@@ -81,7 +82,7 @@ public class CommentService {
 
         Comment findComment = verifyComment(commentId);
 
-        if(findComment.getUserId() != commentUpdateRequestDto.getUserId()){
+        if (findComment.getUserId() != commentUpdateRequestDto.getUserId()) {
             throw new CustomException(ErrorCode.NOT_FOUND_USER);
         }
 
@@ -102,7 +103,7 @@ public class CommentService {
 
         Comment findComment = verifyComment(commentId);
 
-        if(findComment.getUserId() != commentDeleteRequestDto.getUserId()){
+        if (findComment.getUserId() != commentDeleteRequestDto.getUserId()) {
             throw new CustomException(ErrorCode.NOT_FOUND_USER);
         }
 

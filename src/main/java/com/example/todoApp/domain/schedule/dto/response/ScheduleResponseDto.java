@@ -22,6 +22,8 @@ public class ScheduleResponseDto {
 
     private String content;
 
+    private List<ScheduleWithCommentDto> ScheduleWithCommentDto;
+
     private LocalDateTime updatedAt;
 
 }
