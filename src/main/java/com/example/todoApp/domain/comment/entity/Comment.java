@@ -21,7 +21,7 @@ public class Comment extends BaseEntity {
     @Column
     private Long userId; //댓글을 작성하는 user table fk 나타냄
 
-    @Column
+    @Column(nullable = false)
     private String writerId; //댓글 작성자 닉네임
 
     @Column(nullable = false)

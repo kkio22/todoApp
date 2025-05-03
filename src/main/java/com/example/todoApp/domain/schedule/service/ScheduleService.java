@@ -56,7 +56,7 @@ public class ScheduleService {
                 saveSchedule.getWriterId(),
                 saveSchedule.getTitle(),
                 saveSchedule.getContent(),
-                saveSchedule.getCreatedAt()
+                saveSchedule.getUpdatedAt()
         );
     }
 

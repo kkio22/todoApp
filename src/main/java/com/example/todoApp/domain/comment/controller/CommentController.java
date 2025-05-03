@@ -41,8 +41,8 @@ public class CommentController {
     @GetMapping("/comments")
     public ResponseEntity<List<CommentListResponseDto>> findCommentByPage(
             @PathVariable Long scheduleId,
-            @RequestParam Long page,
-            @RequestParam Long size
+            @RequestParam (defaultValue = "1") Long page,
+            @RequestParam (defaultValue = "10")Long size
     ) {
         List<CommentListResponseDto> commentListResponseDto = commentService.findCommentByPage(scheduleId, page, size);
 

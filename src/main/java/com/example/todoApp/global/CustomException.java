@@ -1,6 +1,5 @@
 package com.example.todoApp.global;
 
-import com.example.todoApp.domain.comment.exception.CommentErrorCode;
 import lombok.Getter;
 
 @Getter
