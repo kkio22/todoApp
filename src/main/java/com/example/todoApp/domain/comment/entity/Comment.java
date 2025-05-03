@@ -31,16 +31,18 @@ public class Comment extends BaseEntity {
     private int commentCount = 0;
 
     @ManyToOne(fetch = FetchType.LAZY) // 이것때문에 n +1 발생
+    @JoinColumn(name = "schedule_id")
     private Schedule schedule;
 
     public Comment() {
 
     }
 
-    public Comment(Long userId, String content, String writerId) {
+    public Comment(Long userId, String content, String writerId, Schedule schedule) {
         this.userId=userId;
         this.content=content;
         this.writerId=writerId;
+        this.schedule=schedule;
         this.commentCount= ++commentCount;
     }
 

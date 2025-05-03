@@ -34,12 +34,13 @@ public class CommentService {
 
     public CommentCreateResponseDto createComment(Long scheduleId, CommentCreateRequestDto commentCreateRequestDto) {
 
-        verifySchedule(scheduleId); // 댓글 달고 싶은 일정이 DB에 있는지 확인
+        Schedule schedule = verifySchedule(scheduleId); // 댓글 달고 싶은 일정이 DB에 있는지 확인
 
         Comment comment = new Comment( // dto -> entity
                 commentCreateRequestDto.getUserId(),
                 commentCreateRequestDto.getContent(),
-                commentCreateRequestDto.getWriterId()
+                commentCreateRequestDto.getWriterId(),
+                schedule
         );
 
 
