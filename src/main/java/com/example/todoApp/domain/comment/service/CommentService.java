@@ -44,6 +44,9 @@ public class CommentService {
         );
 
 
+        schedule.addComment(comment);
+
+
         Comment saveComment = commentRepository.save(comment); //DB에 저장
 
         return new CommentCreateResponseDto( // entity -> dto

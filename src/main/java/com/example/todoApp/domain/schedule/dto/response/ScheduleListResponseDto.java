@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
+import java.util.List;
+
 @Getter
 @AllArgsConstructor //생성자
 public class ScheduleListResponseDto {
@@ -15,6 +17,8 @@ public class ScheduleListResponseDto {
     private String title;
 
     private String content;
+
+    private int commentCount;
 
     private LocalDateTime updatedAt;
 

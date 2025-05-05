@@ -2,6 +2,7 @@ package com.example.todoApp.domain.schedule.service;
 
 import com.example.todoApp.domain.comment.dto.response.CommentListResponseDto;
 import com.example.todoApp.domain.comment.entity.Comment;
+import com.example.todoApp.domain.comment.repository.CommentRepository;
 import com.example.todoApp.domain.comment.service.CommentService;
 import com.example.todoApp.domain.schedule.dto.request.ScheduleCreateRequestDto;
 import com.example.todoApp.domain.schedule.dto.request.ScheduleRequestDto;
@@ -30,6 +31,7 @@ import java.util.List;
 public class ScheduleService {
 
     private final ScheduleRepository scheduleRepository;
+    private final CommentRepository commentRepository;
 
 
     /*
@@ -70,15 +72,19 @@ public class ScheduleService {
 
         List<Schedule> scheduleList = new ArrayList<>(schedulePage.getContent()); //scheduleList에 페이징 단위의 객체에 있는 일정을 나눠서 하나하나 넣음
 
+       // List<Long> commentCount = commentRepository.countAllByScheduleId((scheduleList.stream().map(Schedule ::getId)).count());
+                // index 방법 , 단뱡향일때는 사용할 수 있음
         return scheduleList.stream()//List를 stream으로 바뀜 => map으로 나타내려고
-                .map(schedule -> new ScheduleListResponseDto(
+                .map(schedule -> new ScheduleListResponseDto( //schedule 객체 0부터 정해둔 끝까지 돌아다니면서 id, writerid, title, content, comments, updateAt을 0번째 꺼 new scheduleListResponseDto에 넣는 과정 반복
                         schedule.getId(),
                         schedule.getWriterId(),
                         schedule.getTitle(),
                         schedule.getContent(),
-                        schedule.getCreatedAt()
+                        schedule.getComments().size(),
+                        schedule.getUpdatedAt()
                 ))//entity -> dto로 변환
                 .toList();//다시 List로 변환
+
     }
 
     /*
@@ -103,7 +109,7 @@ public class ScheduleService {
                                 comment.getWriterId(),
                                 comment.getUpdatedAt()
                         ))
-                        .toList(),
+                        .toList(), //같이 가지고 나온 댓글을 dto 갹체 하나하나로 해서 다시 list로 반환
                 findSchedule.getUpdatedAt()
 
 
