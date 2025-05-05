@@ -36,6 +36,7 @@ public class CommentService {
 
         Schedule schedule = verifySchedule(scheduleId); // 댓글 달고 싶은 일정이 DB에 있는지 확인
 
+
         Comment comment = new Comment( // dto -> entity
                 commentCreateRequestDto.getUserId(),
                 commentCreateRequestDto.getContent(),
@@ -64,9 +65,17 @@ public class CommentService {
 
         Pageable pageable = PageRequest.of(page.intValue() - 1, size.intValue(), Sort.by("id").descending());
 
-        Page<Comment> commentPage = commentRepository.findAll(pageable);
+        Page<Comment> commentPage = commentRepository.findAllByScheduleId(scheduleId, pageable);
 
         List<Comment> commentList = new ArrayList<>(commentPage.getContent());
+
+        for( Comment comment : commentList){
+            if(! comment.getSchedule().getId().equals(scheduleId)){
+                throw new CustomException(ErrorCode.SCHEDULE_ID_MISMATCH);
+            }
+        }
+
+
 
         return commentList.stream()
                 .map(comment -> new CommentListResponseDto(
@@ -86,8 +95,12 @@ public class CommentService {
 
         Comment findComment = verifyComment(commentId);
 
-        if (findComment.getUserId() != commentUpdateRequestDto.getUserId()) {
-            throw new CustomException(ErrorCode.NOT_FOUND_USER);
+        if(! findComment.getSchedule().getId().equals(scheduleId)){
+            throw new CustomException(ErrorCode.SCHEDULE_ID_MISMATCH);
+        }
+
+        if (! findComment.getUserId().equals(commentUpdateRequestDto.getUserId())) {
+            throw new CustomException(ErrorCode.NOT_FOUND_OWNER);
         }
 
         findComment.updateComment(commentUpdateRequestDto.getContent());
@@ -107,8 +120,12 @@ public class CommentService {
 
         Comment findComment = verifyComment(commentId);
 
-        if (findComment.getUserId() != commentDeleteRequestDto.getUserId()) {
-            throw new CustomException(ErrorCode.NOT_FOUND_USER);
+        if(! findComment.getSchedule().getId().equals(scheduleId)){
+            throw new CustomException(ErrorCode.SCHEDULE_ID_MISMATCH);
+        }
+
+        if (! findComment.getUserId().equals(commentDeleteRequestDto.getUserId())) {
+            throw new CustomException(ErrorCode.NOT_FOUND_OWNER);
         }
 
         commentRepository.delete(findComment); //댓글만 삭제 -> schedule은 삭제 X
@@ -119,6 +136,7 @@ public class CommentService {
 
         return commentRepository.findById(commentId)
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_COMMENT));
+
     }
 
     private Schedule verifySchedule(Long scheduleId) {

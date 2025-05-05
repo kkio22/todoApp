@@ -42,7 +42,7 @@ public class ChildCommentService {
                 commentCreateRequestDto.getWriterId(),
                 commentCreateRequestDto.getContent(),
                 comment//이렇게 객체에 담겨도 db에는 id로 매핑되기때문에 id만 있는거지??
-                 //이렇게 값을 다 넣어줘야 함 연관관계로 매핑되어있어도
+                //이렇게 값을 다 넣어줘야 함 연관관계로 매핑되어있어도
         );
 
         comment.addChildComment(childComment); //양방향 매핑으로 comment에 childComment 들어감
@@ -66,28 +66,39 @@ public class ChildCommentService {
 
         Pageable pageable = PageRequest.of(page.intValue() - 1, size.intValue(), Sort.by("id").descending());
 
-        Page<ChildComment> childCommentPage = childCommentRepository.findAll(pageable);
+        Page<ChildComment> childCommentPage = childCommentRepository.findAllByCommentId(commentId, pageable);
 
         List<ChildComment> childCommentList = new ArrayList<>(childCommentPage.getContent());
 
+        for(ChildComment childComment : childCommentList){
+            if(! childComment.getComment().getId().equals(commentId)){
+                throw new CustomException(ErrorCode.COMMENT_ID_MISMATCH);
+            }
+        }
+
         return childCommentList.stream()
                 .map(childComment -> new ChildCommentListResponseDto(
-                        childComment.getId(),
-                        childComment.getWriterId(),
-                        childComment.getContent(),
-                        childComment.getUpdatedAt()
-                )
+                                childComment.getId(),
+                                childComment.getWriterId(),
+                                childComment.getContent(),
+                                childComment.getUpdatedAt()
+                        )
                 )
                 .toList();
     }
 
     @Transactional
     public ChildCommentUpdateResponseDto updateChildComment(Long commentId, Long childCommentId, ChildCommentUpdateRequestDto childCommentUpdateRequestDto) {
+
         Comment comment = verifyComment(commentId);
 
         Schedule schedule = verifySchedule(comment.getSchedule().getId());
 
-        ChildComment childComment = childCommentRepository.findById(childCommentId).orElseThrow(()-> new CustomException(ErrorCode.NOT_FOUND_CHILDCOMMENT));
+        ChildComment childComment = childCommentRepository.findById(childCommentId).orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_CHILDCOMMENT));
+
+        if (!childComment.getComment().getId().equals(commentId)) {
+            throw new CustomException(ErrorCode.COMMENT_ID_MISMATCH);
+        }
 
         childComment.updateChildComment(
                 childCommentUpdateRequestDto.getContent()
@@ -108,7 +119,11 @@ public class ChildCommentService {
 
         Schedule schedule = verifySchedule(comment.getSchedule().getId());
 
-        ChildComment childComment = childCommentRepository.findById(childCommentId).orElseThrow(()-> new CustomException(ErrorCode.NOT_FOUND_CHILDCOMMENT));
+        ChildComment childComment = childCommentRepository.findById(childCommentId).orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_CHILDCOMMENT));
+
+        if (!childComment.getComment().getId().equals(commentId)) {
+            throw new CustomException(ErrorCode.COMMENT_ID_MISMATCH);
+        }
 
         childCommentRepository.delete(childComment);
 
@@ -116,15 +131,14 @@ public class ChildCommentService {
 
 
     private Schedule verifySchedule(Long scheduleId) {
-        Schedule findSchedule = scheduleRepository.findById(scheduleId).orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_SCHEDULE));
 
-        return findSchedule;
+        return scheduleRepository.findById(scheduleId)
+                .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_SCHEDULE));
     }
 
     private Comment verifyComment(Long commentId) {
-        Comment findComment = commentRepository.findById(commentId)
+        return commentRepository.findById(commentId)
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_COMMENT));
-        return findComment;
     }
 
 

@@ -143,8 +143,8 @@ public class ScheduleService {
         Schedule findSchedule = scheduleRepository.findById(scheduleId)
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_SCHEDULE));
 
-        if (findSchedule.getUserId() != scheduleUpdateRequestDto.getUserId()) {
-            throw new CustomException(ErrorCode.NOT_FOUND_USER);
+        if (! findSchedule.getUserId().equals(scheduleUpdateRequestDto.getUserId())) {
+            throw new CustomException(ErrorCode.NOT_FOUND_OWNER);
         }
 
         findSchedule.updateSchedule(
@@ -171,8 +171,8 @@ public class ScheduleService {
         Schedule findSchedule = scheduleRepository.findById(scheduleId)
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_SCHEDULE));
 
-        if (findSchedule.getUserId() != scheduleRequestDto.getUserId()) {
-            throw new CustomException(ErrorCode.NOT_FOUND_USER);
+        if (! findSchedule.getUserId().equals(scheduleRequestDto.getUserId())) {
+            throw new CustomException(ErrorCode.NOT_FOUND_OWNER);
         }
 
 
