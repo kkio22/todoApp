@@ -41,15 +41,15 @@ public class ChildCommentService {
         ChildComment childComment = new ChildComment(
                 commentCreateRequestDto.getWriterId(),
                 commentCreateRequestDto.getContent(),
-                comment,//이렇게 객체에 담겨도 db에는 id로 매핑되기때문에 id만 있는거지??
-                schedule //이렇게 값을 다 넣어줘야 함 연관관계로 매핑되어있어도
+                comment//이렇게 객체에 담겨도 db에는 id로 매핑되기때문에 id만 있는거지??
+                 //이렇게 값을 다 넣어줘야 함 연관관계로 매핑되어있어도
         );
+
+        comment.addChildComment(childComment); //양방향 매핑으로 comment에 childComment 들어감
 
         ChildComment saveComment = childCommentRepository.save(childComment);
 
         return new ChildCommentCreateResponseDto(
-                saveComment.getSchedule().getId(),
-                saveComment.getComment().getId(),
                 saveComment.getId(),
                 saveComment.getWriterId(),
                 saveComment.getContent(),
@@ -72,8 +72,6 @@ public class ChildCommentService {
 
         return childCommentList.stream()
                 .map(childComment -> new ChildCommentListResponseDto(
-                        childComment.getSchedule().getId(),
-                        childComment.getComment().getId(),
                         childComment.getId(),
                         childComment.getWriterId(),
                         childComment.getContent(),
@@ -96,8 +94,6 @@ public class ChildCommentService {
         );
 
         return new ChildCommentUpdateResponseDto(
-                childComment.getSchedule().getId(),
-                childComment.getComment().getId(),
                 childComment.getId(),
                 childComment.getWriterId(),
                 childComment.getContent(),

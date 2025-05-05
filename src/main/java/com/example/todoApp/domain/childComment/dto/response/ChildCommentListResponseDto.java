@@ -9,10 +9,6 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class ChildCommentListResponseDto {
 
-    private Long scheduleId;
-
-    private Long commentId;
-
     private Long id;
 
     private String writerId;

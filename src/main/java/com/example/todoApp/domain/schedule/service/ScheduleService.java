@@ -1,6 +1,9 @@
 package com.example.todoApp.domain.schedule.service;
 
+import com.example.todoApp.domain.childComment.dto.response.ChildCommentCreateResponseDto;
+import com.example.todoApp.domain.childComment.entity.ChildComment;
 import com.example.todoApp.domain.comment.dto.response.CommentListResponseDto;
+import com.example.todoApp.domain.comment.dto.response.CommentWithChildCommentDto;
 import com.example.todoApp.domain.comment.entity.Comment;
 import com.example.todoApp.domain.comment.repository.CommentRepository;
 import com.example.todoApp.domain.comment.service.CommentService;
@@ -22,6 +25,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 
@@ -103,11 +107,22 @@ public class ScheduleService {
                 findSchedule.getTitle(),
                 findSchedule.getContent(),
                 findSchedule.getComments().stream().
-                        map(comment -> new ScheduleWithCommentDto(
+                        sorted(Comparator.comparing(Comment :: getCreatedAt).reversed())
+                        .map(comment -> new ScheduleWithCommentDto(
                                 comment.getId(),
-                                comment.getContent(),
                                 comment.getWriterId(),
-                                comment.getUpdatedAt()
+                                comment.getContent(),
+                                comment.getUpdatedAt(),
+                                comment.getChildComment().stream().
+                                        sorted(Comparator.comparing(ChildComment::getCreatedAt).reversed())
+                                        .map(childComment -> new CommentWithChildCommentDto(
+                                                childComment.getId(),
+                                                childComment.getWriterId(),
+                                                childComment.getContent(),
+                                                childComment.getUpdatedAt()
+                                        ))
+                                        .toList()
+
                         ))
                         .toList(), //같이 가지고 나온 댓글을 dto 갹체 하나하나로 해서 다시 list로 반환
                 findSchedule.getUpdatedAt()

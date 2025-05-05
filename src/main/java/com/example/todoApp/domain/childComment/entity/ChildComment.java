@@ -25,19 +25,14 @@ public class ChildComment extends BaseEntity {
     @JoinColumn(name = "comment_id")
     private Comment comment;
 
-    @ManyToOne(fetch =  FetchType.LAZY)
-    @JoinColumn(name = "schedule_id")
-    private Schedule schedule;
-
     public ChildComment() {
 
     }
 
-    public ChildComment(String writerId, String content, Comment comment, Schedule schedule) {
+    public ChildComment(String writerId, String content, Comment comment) {
         this.writerId = writerId;
         this.content=content;
         this.comment=comment;
-        this.schedule=schedule;
     }
 
     public void updateChildComment(String content) {
