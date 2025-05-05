@@ -1,16 +1,17 @@
-package com.example.todoApp.domain.comment.dto.response;
+package com.example.todoApp.domain.childComment.dto.response;
 
-import com.example.todoApp.domain.comment.entity.Comment;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Getter
 @AllArgsConstructor
-public class CommentListResponseDto {
+public class ChildCommentUpdateResponseDto {
+
+    private Long scheduleId;
+
+    private Long commentId;
 
     private Long id;
 
@@ -19,6 +20,4 @@ public class CommentListResponseDto {
     private String content;
 
     private LocalDateTime updatedAt;
-
-
 }

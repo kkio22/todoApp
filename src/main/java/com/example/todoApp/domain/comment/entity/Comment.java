@@ -1,6 +1,7 @@
 package com.example.todoApp.domain.comment.entity;
 
 import com.example.todoApp.api.BaseEntity;
+import com.example.todoApp.domain.childComment.entity.ChildComment;
 import com.example.todoApp.domain.comment.dto.request.CommentUpdateRequestDto;
 import com.example.todoApp.domain.schedule.entity.Schedule;
 import jakarta.persistence.*;
@@ -8,6 +9,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -31,6 +34,9 @@ public class Comment extends BaseEntity {
     @JoinColumn(name = "schedule_id")
     private Schedule schedule;
 
+    @OneToMany(mappedBy= "comment", cascade = CascadeType.ALL , orphanRemoval = true)
+    private List<ChildComment> childComment = new ArrayList<>()
+;
     public Comment() {
 
     }
