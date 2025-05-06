@@ -69,11 +69,11 @@ public class CommentService {
 
         List<Comment> commentList = new ArrayList<>(commentPage.getContent());
 
-        for( Comment comment : commentList){
-            if(! comment.getSchedule().getId().equals(scheduleId)){
-                throw new CustomException(ErrorCode.SCHEDULE_ID_MISMATCH);
-            }
-        }
+//        for( Comment comment : commentList){
+//            if(! comment.getSchedule().getId().equals(scheduleId)){
+//                throw new CustomException(ErrorCode.SCHEDULE_ID_MISMATCH);
+//            }
+//        }
 
 
 

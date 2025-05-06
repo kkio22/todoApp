@@ -76,8 +76,6 @@ public class ScheduleService {
 
         List<Schedule> scheduleList = new ArrayList<>(schedulePage.getContent()); //scheduleList에 페이징 단위의 객체에 있는 일정을 나눠서 하나하나 넣음
 
-       // List<Long> commentCount = commentRepository.countAllByScheduleId((scheduleList.stream().map(Schedule ::getId)).count());
-                // index 방법 , 단뱡향일때는 사용할 수 있음
         return scheduleList.stream()//List를 stream으로 바뀜 => map으로 나타내려고
                 .map(schedule -> new ScheduleListResponseDto( //schedule 객체 0부터 정해둔 끝까지 돌아다니면서 id, writerid, title, content, comments, updateAt을 0번째 꺼 new scheduleListResponseDto에 넣는 과정 반복
                         schedule.getId(),
