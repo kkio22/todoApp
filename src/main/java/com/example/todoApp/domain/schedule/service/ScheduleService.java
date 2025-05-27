@@ -38,9 +38,6 @@ public class ScheduleService {
     private final CommentRepository commentRepository;
 
 
-    /*
-    일정 생성
-     */
     public ScheduleCreateResponseDto createSchedule(ScheduleCreateRequestDto scheduleCreateRequestDto) {
 
         Schedule schedule = new Schedule(
