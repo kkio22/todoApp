@@ -38,9 +38,6 @@ public class ScheduleService {
     private final CommentRepository commentRepository;
 
 
-    /*
-    일정 생성
-     */
     public ScheduleCreateResponseDto createSchedule(ScheduleCreateRequestDto scheduleCreateRequestDto) {
 
         Schedule schedule = new Schedule(
@@ -87,9 +84,6 @@ public class ScheduleService {
 
     }
 
-    /*
-    일정 단건 조회 -> 댓글이 있는 없는 그냥 하나로 해결 가능, 없으면 빈 공간으로 내보냄
-     */
 
     public ScheduleResponseDto findById(Long scheduleId) {
 
