@@ -62,9 +62,7 @@ public class ScheduleService {
         );
     }
 
-    /*
-    일정 10개씩 조회
-     */
+
 
     public List<ScheduleListResponseDto> findScheduleByPage(Long page, Long size) {
 
