@@ -5,6 +5,8 @@ import com.example.todoApp.domain.childComment.entity.ChildComment;
 import com.example.todoApp.domain.comment.entity.Comment;
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+
 import org.yaml.snakeyaml.DumperOptions;
 
 import java.time.LocalDateTime;
@@ -15,6 +17,7 @@ import java.util.List;
 @Entity
 @Getter
 @Table(name = "schedule")
+@RequiredArgsConstructor
 public class Schedule extends BaseEntity {
 
     @Id
@@ -37,9 +40,6 @@ public class Schedule extends BaseEntity {
     private List<Comment> comments = new ArrayList<>(); // 일정 <-> 댓글 양방향 연결
 
 
-    public Schedule() {
-
-    }
 
     public Schedule(Long userId, String writerId, String title, String content) {
         this.userId = userId;

@@ -36,9 +36,7 @@ public class ScheduleController {
 
     }
 
-    /*
-    게시물 페이징 전체 조회
-     */
+
     @GetMapping
     public ResponseEntity<List<ScheduleListResponseDto>> findScheduleByPage(
             @RequestParam(defaultValue = "1") Long page,
